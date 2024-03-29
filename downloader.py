@@ -7,7 +7,6 @@
 
 from pytube import YouTube
 import data as d
-import streamlit as st
 # # Create a YouTube object
 # yt = YouTube(d.link)
 
@@ -29,17 +28,12 @@ class download:
                     resolutions.add(int(stream.resolution[:-1])) # removing 'p' from the resolutions
             return resolutions
         except Exception as e:
-            st.error('Error fetching video information')
+            print('Error fetching video information')
 
     def downloader(this, chosen_res):
         try:
             # Get the streams with a maximum resolution of 720p
             video_stream = this.yt.streams.filter(res=str(chosen_res)).first()
-
-            progress_bar = st.progress(0)
             video_stream.download(output_path='videos')
-            progress_bar.progress(100)
-            
-            st.success('Video Loaded !!')
         except Exception as e:
-            st.error('Error downloading video !')
+            print('Error downloading video !')
