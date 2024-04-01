@@ -25,7 +25,7 @@ class download:
         except Exception as e:
             print('Error fetching video information')
 
-    def progress(stream, chunk, bytes_remaining):
+    def progress(this, stream, chunk, bytes_remaining):
         total_size = stream.filesize
         bytes_downloaded = total_size - bytes_remaining
         percentage = (bytes_downloaded / total_size) * 100

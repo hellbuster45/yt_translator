@@ -35,26 +35,25 @@ try:
                 progressbar.progress(100)
                 
                 if dw_resp.text == "Success":
+                    st.write('updated session')
                     st.session_state['downloaded'] = True
             except:
                 st.error("Video couldn't be downloaded")
 
-        if st.session_state['downloaded']:
-            title = dw.yt.title
-            title = re.sub(r'[^\w\s()-[\]{}<>]', '', title)
-            st.write(title)
-            if not st.session_state['transcribed']:
-                transcribe = st.button("Start Transcription - ")
+            if st.session_state['downloaded']:
+                title = dw.yt.title
+                title = re.sub(r'[^\w\s()-[\]{}<>]', '', title)
+                st.write(title)
                 
-                if transcribe:
-                    trans_resp = rq.post(url="http://127.0.0.1:5000/transcripter", json={'url' : title + '.mp4'})
+                if not st.session_state['transcribed']:
+                    transcribe = st.button("Start Transcription - ")
                     
-                    if trans_resp.text == "Success":
-                        st.session_state['transcribed'] = True
-                        st.write("Success")
+                    if transcribe:
+                        trans_resp = rq.post(url="http://127.0.0.1:5000/transcripter", json={'url' : title + '.mp4'})
+                        
+                        if trans_resp.text == "Success":
+                            st.session_state['transcribed'] = True
+                            st.write("Success")
 except Exception as e:
-    if error_count == 0:
-        error_count = 1
-    else:
-        st.error('Video not available')
-        st.error(e)
+    st.error('Video not available')
+    st.error(e)
