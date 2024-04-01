@@ -16,8 +16,9 @@ def downloader():
     dw_data = request.json
     dw = download(dw_data['url'])
     print(dw_data['chosen_res'])
-    dw.downloader(dw_data['chosen_res'])
-    return 'Success'
+    id = dw.downloader(dw_data['chosen_res'])
+    print(f'server : video{id}')
+    return 'Success', id
 
 @app.route("/transcripter", methods=['GET', 'POST'])
 def transcripter():
