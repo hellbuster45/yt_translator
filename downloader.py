@@ -6,7 +6,6 @@
 # for getting transcript :- captions.generate_srt_captions()
 
 from pytube import YouTube
-import data as d
 import string
 import random
 
@@ -39,13 +38,22 @@ class download:
     
     def downloader(this, chosen_res):
         try:
-        #     Get the streams with a maximum resolution of 720p
-        
+            # Get the streams with a maximum resolution of 720p
             rand_id = this.generate_random_string(4)
-            video_stream = this.streams.filter(only_audio=True).first()
-            video_stream.download(output_path='videos', filename=f'video{rand_id}')
-
-            print(f'video{rand_id}')
+            print(chosen_res)
+            
+            # video_stream = this.streams.filter(res=chosen_res, progressive=True, file_extension='mp4')
+            # video_stream.download(output_path='videos', filename=f'video{rand_id}.mp4')
+            stream_found = False
+            for stream in this.streams.filter(res=chosen_res, progressive=True, file_extension='mp4').all():
+                if stream.includes_audio_track and stream.includes_video_track:
+                    stream.download(output_path='videos', filename=f'video{rand_id}.mp4')
+                    print('\n\nsuccess\n\n')
+                    print(f'video{rand_id}.mp4\n\n')
+                    stream_found = True
+                    break
+            if stream_found == False:
+                print('\n\nNo A/V streams available!!\n\n')
         except Exception as e:
             print('Error downloading video !')
             print(e)

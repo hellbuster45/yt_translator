@@ -2,7 +2,7 @@ import streamlit as st
 import requests as rq
 import re
 from downloader import download
-
+import data as d
 error_count = 0
 
 st.title('LINUDIO')
@@ -35,17 +35,19 @@ try:
                     # st.write(dw.yt.title + '.mp4')
                     progressbar = st.progress(0, text='Download Progress')
                     
-                    dw_resp = rq.post(url="http://127.0.0.1:5000/downloader", json = {'chosen_res' : str(option), 'url' : dw.url})
-                    
+                    d.download_response = rq.post(url="http://127.0.0.1:5000/downloader", json = {'chosen_res' : str(option), 'url' : dw.url})
+                    st.write('after download')
                     progressbar.progress(50)
-                    st.write(dw_resp)
+                    id = d.download_response
+                    st.write(d.download_response.text)
                     progressbar.progress(100)
                     
-                    if dw_resp.text == "Success":
+                    if d.download_response:
                         st.write('updated session')
                         st.session_state['downloaded'] = True
-                except:
+                except Exception as e:
                     st.error("Video couldn't be downloaded")
+                    st.write(e)
 
     if st.session_state['downloaded']:
         title = dw.yt.title
@@ -56,7 +58,7 @@ try:
             transcribe = st.button("Start Transcription - ")
             
             if transcribe:
-                trans_resp = rq.post(url="http://127.0.0.1:5000/transcripter", json={'url' : title + '.mp4'})
+                trans_resp = rq.post(url="http://127.0.0.1:5000/transcripter", json={'url' : f'video{d.download_response.text}.mp4'})
                 
                 if trans_resp.text == "Success":
                     st.session_state['transcribed'] = True

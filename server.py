@@ -18,7 +18,7 @@ def downloader():
     print(dw_data['chosen_res'])
     id = dw.downloader(dw_data['chosen_res'])
     print(f'server : video{id}')
-    return 'Success', id
+    return id
 
 @app.route("/transcripter", methods=['GET', 'POST'])
 def transcripter():
