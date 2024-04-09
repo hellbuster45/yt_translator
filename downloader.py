@@ -45,7 +45,7 @@ class download:
             # video_stream = this.streams.filter(res=chosen_res, progressive=True, file_extension='mp4')
             # video_stream.download(output_path='videos', filename=f'video{rand_id}.mp4')
             stream_found = False
-            for stream in this.streams.filter(res=chosen_res, progressive=True, file_extension='mp4').all():
+            for stream in this.streams.filter(res=chosen_res, progressive=True, file_extension='mp4'):
                 if stream.includes_audio_track and stream.includes_video_track:
                     stream.download(output_path='videos', filename=f'video{rand_id}.mp4')
                     print('\n\nsuccess\n\n')
