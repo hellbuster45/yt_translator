@@ -14,19 +14,18 @@ if 'downloaded' not in st.session_state:
 if 'transcribed' not in st.session_state:
     st.session_state['transcribed'] = False
 
-def send_req(endpoint, args):
-    response = rq.post(url = f"http://127.0.0.1:5000/{endpoint}", json = args)
-
 try: 
     dw = download(url)
     st.video(url)
     res = sorted((dw.fetch_res()), reverse=True)
-    resolutions = set()
+    resolutions = list()
+    r = 0
     for r in res:
-        resolutions.add(str(r) + 'p')
-    option = st.selectbox ('Select Resolution: ', resolutions, index = 0)
-
+        resolutions.append(str(r) + 'p')
+    option = st.selectbox ('Select Resolution: ', resolutions)
+    
     if option:
+        st.write(option)
         if not st.session_state['downloaded']: 
             start = st.button("Begin Transcription - ")
 
