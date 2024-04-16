@@ -16,9 +16,12 @@ def downloader():
     dw_data = request.json
     dw = download(dw_data['url'])
     print(dw_data['chosen_res'])
-    id = dw.downloader(dw_data['chosen_res'])
-    print(f'server : video{id}')
-    return id
+    response = dw.downloader(dw_data['chosen_res'])
+    if response == "error":
+        print("no A/V streams (server response !)")
+    else:
+        print(f'server : video{response}')
+    return response
 
 @app.route("/transcripter", methods=['GET', 'POST'])
 def transcripter():

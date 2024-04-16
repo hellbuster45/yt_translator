@@ -54,7 +54,9 @@ class download:
                     break
             if stream_found == False:
                 print('\n\nNo A/V streams available!!\n\n')
+                return "error"
+            else:
+                return rand_id
         except Exception as e:
             print('Error downloading video !')
             print(e)
-        return rand_id
