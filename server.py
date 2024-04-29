@@ -1,6 +1,7 @@
 from flask import Flask, request
 from downloader import download
 from transcripter import transcribe
+from detector import Detector
 app = Flask(__name__)
 
 @app.route('/')
@@ -29,4 +30,16 @@ def transcripter():
     print(tr_data['url'])
     tr = transcribe(url=tr_data['url'])
     tr.transcripter()
+    return "Success"
+
+@app.route("/detector", methods=['GET', 'POST'])
+def detector():
+    dtr_data = request.json
+    print(dtr_data['video_id'])
+    tr = Detector(id=dtr_data['video_id'])
+    tr.detect_language()
+    return "Success"
+
+@app.route("/lol", methods=['GET', 'POST'])
+def lol():
     return "Success"
