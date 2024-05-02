@@ -37,7 +37,6 @@ try:
 
                 if start:
                     try:
-                        # st.write(dw.yt.title + '.mp4')
                         progressbar = st.progress(0, text='Download Progress')
                         
                         d.download_Response = rq.post(url="http://127.0.0.1:5000/downloader", json = {'chosen_res' : str(option), 'url' : dw.url})
