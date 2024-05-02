@@ -3,7 +3,7 @@ import azure.cognitiveservices.speech as speechsdk
 class SpeechSynthesizer:
     def __init__(this, id):
         this.id = id
-        speech_config = speechsdk.SpeechConfig(subscription='d46b07d512184b839945030e6b17abda', region='centralindia')
+        speech_config = speechsdk.SpeechConfig(subscription='', region='centralindia')
         audio_config = speechsdk.audio.AudioOutputConfig(filename = f'voiceovers\\voiceover{id}.wav')
         speech_config.speech_synthesis_voice_name = 'en-US-AvaMultilingualNeural'
         this.speech_synthesizer = speechsdk.SpeechSynthesizer(speech_config=speech_config, audio_config=audio_config)
