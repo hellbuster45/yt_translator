@@ -164,4 +164,5 @@ demo.py
 data.py
 deepgram_key.txt
 audios
+voiceovers/
 .gitignore

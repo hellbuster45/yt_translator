@@ -59,39 +59,58 @@ try:
                         st.write(e)
 
     if st.session_state['downloaded']:
-        st.write('yo wassup')
-        if not st.session_state['detected']:
-            detect = st.button('detect language')
-            if detect: 
-                d.detector_Response = rq.post(url='http://127.0.0.1:5000/detector', json = {'video_id' : f'{d.download_Response.text}'})
-                st.write('request sent')
-
-                if d.detector_Response == "lel":
-                    st.session_state['detected'] = True
-
-    if st.session_state['detected']:
         title = dw.yt.title
         title = re.sub(r'[^\w\s(){}\[\]<>]', '', title)
         st.write(title)
         
+        supported_languages = {
+            'English' : 'en',
+            'Spanish' : 'es',
+            'French' : 'fr',
+            'german' : 'de',
+            'Italian' : 'it',
+            'Portugese' : 'pt',
+            'Dutch' : 'nl',
+            'Hindi' : 'hi',
+            'Japanese' : 'ja',
+            'Chinese' : 'zh',
+            'Finnish' : 'fi',
+            'Korean' : 'ko',
+            'Polish' : 'pl',
+            'Russian' : 'ru',
+            'Turkish' : 'tr',
+            'Ukranian' : 'uk'
+        }
+
         if not st.session_state['transcribed']:
             try:
-                transcribe = st.button("Start Transcription - ")
-                
-                if transcribe:
-                    d.transcript_Response = rq.post(url="http://127.0.0.1:5000/transcripter", json={'url' : f'video{d.download_Response.text}.mp4'})
-                    
-                    if d.transcript_Response.text == "Success":
-                        st.session_state['transcribed'] = True
-                        st.write("Success")
+
+                lang = st.selectbox('Select Source Language: ', supported_languages)
+                st.write(lang)
+                if lang:
+                    transcribe = st.button("Start Transcription - ")
+                    if transcribe:
+                        st.write(d.download_Response.text)
+                        d.transcript_Response = rq.post(url="http://127.0.0.1:5000/transcripter", json={'url' : f'video{d.download_Response.text}.mp4', 'source_lang' : supported_languages[lang]})
+                        
+                        if d.transcript_Response.text != "Failed":
+                            st.session_state['transcribed'] = True
+                            st.write("Success")
+                            st.write(d.transcript_Response.text)
             except Exception as e:
                 st.error(e)
                 st.error("app.py" + t.print_exc())
     
+
     if st.session_state['transcribed']: 
         with open('response.txt', mode='r', encoding= 'utf-8') as f:
                 content = f.read()
         st.markdown(content)
+
+        voice = st.button('Get Voiceover - ')
+        if voice: 
+            resp = rq.post(url="http://127.0.0.1:5000/voiceover", json={'text' : d.transcript_Response.text, 'id' : d.download_Response.text})
+            st.audio(data = f'voiceovers\\voiceover{d.download_Response.text}.wav', format="audio/wav")
 
 except Exception as e:
     st.error('Video not available')

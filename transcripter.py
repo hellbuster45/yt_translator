@@ -20,13 +20,13 @@ import data as d
 #         f.write(transcript.export_subtitles_srt())
 
 class transcribe:
-    def __init__(this, url):
+    def __init__(this, url, lang_code):
         # API key
         aai.settings.api_key = d.auth_key
         
         this.file_url = 'videos/' + url
-        
-        this.config = aai.TranscriptionConfig(language_detection=True)
+        this.lang_code = lang_code
+        this.config = aai.TranscriptionConfig(language_code=this.lang_code, speech_model=aai.SpeechModel.best)
         this.transcriber = aai.Transcriber(config=this.config)
 
     def transcripter(this):
@@ -34,7 +34,9 @@ class transcribe:
 
         if transcript.status == aai.TranscriptStatus.error:
             print(transcript.error)
+            return 1
         else:
             print(transcript.text)
             with open('response.txt', mode='w', encoding= 'utf-8') as f:
                 f.write(transcript.export_subtitles_srt())
+            return transcript.text

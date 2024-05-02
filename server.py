@@ -2,6 +2,7 @@ from flask import Flask, request
 from downloader import download
 from transcripter import transcribe
 from detector import Detector
+from tts import SpeechSynthesizer
 app = Flask(__name__)
 
 @app.route('/')
@@ -27,10 +28,14 @@ def downloader():
 @app.route("/transcripter", methods=['GET', 'POST'])
 def transcripter():
     tr_data = request.json
-    print(tr_data['url'])
-    tr = transcribe(url=tr_data['url'])
-    tr.transcripter()
-    return "Success"
+    print(tr_data['url'], tr_data['source_lang'])
+    tr = transcribe(url=tr_data['url'], lang_code=tr_data['source_lang'])
+    text = tr.transcripter()
+    if text == 1:
+        return 'Failed'
+    else:
+        print('\n\nserver\n' + text + '\n\n')
+        return text
 
 @app.route("/detector", methods=['GET', 'POST'])
 def detector():
@@ -40,6 +45,10 @@ def detector():
     tr.detect_language()
     return "Success"
 
-@app.route("/lol", methods=['GET', 'POST'])
-def lol():
-    return "Success"
+@app.route("/voiceover", methods=['GET', 'POST'])
+def voiceover():
+    data = request.json
+    print('\n\nI D \n' + data['id'] + '\n\n')
+    tts = SpeechSynthesizer(data['id'])
+    resp = tts.synthesize_text(data['text'])
+    return resp
