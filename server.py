@@ -9,10 +9,6 @@ app = Flask(__name__)
 def index():
     return 'Index Page'
 
-@app.route('/hello')
-def hello():
-    return "st.write('Hello, World')"
-
 @app.route('/downloader', methods=['GET', 'POST'])
 def downloader():
     dw_data = request.json
